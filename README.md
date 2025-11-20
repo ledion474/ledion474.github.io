@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <title>TrynaWinnin</title>
 
@@ -160,16 +162,16 @@ Can you win the secret prize??</p>
             const endMessage = document.getElementById("endMessage");
 
             const phrases = [
-                "Ok, nice job… too bad there’s no prize 😏",
-                "You won?! Well… don’t expect anything 😎",
-                "Wow, 10 in a row… the most you get is glory 😏",
-                "Congrats, now you can brag… to yourself 😂",
-                "Great job! Too bad it’s useless 😜",
-                "You did 10? Fantastic… the only reward is my applause 👏",
-                "Legend of flipping… too bad it’s just for your ego 😏",
-                "Incredible… but nothing tangible for you 😬",
-                "You beat the odds? Eh, so what? No prize 😎",
-                "Victory! The only reward is the coin’s smile 😏"
+                "Bravo, you made it! The impossible is possible. 😏",
+                "You beat the odds… what now? 🤔",
+                "10 in a row! A legend among coin flippers!",
+                "Congrats! No prize… only glory awaits. 🎉",
+                "You won! The universe acknowledges your skill. 😎",
+                "Perfect streak! Secrets of the coin are yours now.",
+                "Master flipper! Few dare to achieve this.",
+                "The coin bows to your consistency!",
+                "Incredible! The streak whispers your name.",
+                "Victory! Only the truly patient can reach this."
             ];
 
             let streak = 0;
