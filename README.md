@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <title>TrynaWinnin</title>
-
     <style>
         body {
             text-align: center;
@@ -20,11 +16,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow-x: hidden;
         }
 
-        #ad-placeholder1 {
-            position: fixed;
-            right: 0px;
+        #ad-placeholder1, #ad-placeholder2 {
             width: 90%;
             max-width: 90px;
             height: 728px;
@@ -36,23 +31,13 @@
             border: 2px dashed #555;
             color: #aaa;
             font-size: 18px;
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        #ad-placeholder2 {
-            position: fixed;
-            left: 0px;
-            width: 90%;
-            max-width: 90px;
-            height: 728px;
-            background: #333;
-            margin: 0 auto 25px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px dashed #555;
-            color: #aaa;
-            font-size: 18px;
-        }
+        #ad-placeholder1 { right: 0; }
+        #ad-placeholder2 { left: 0; }
 
         #coin {
             font-size: 100px;
@@ -70,11 +55,14 @@
             background: #333;
             color: white;
             border-radius: 8px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
         }
 
-        button:hover {
-            background: #555;
-        }
+        button:hover { background: #555; }
 
         #counter {
             font-weight: bold;
@@ -110,6 +98,7 @@
             padding: 20px;
             display: none;
             flex-direction: column;
+            background: black;
         }
 
         #retryBtn {
@@ -123,174 +112,197 @@
             border-radius: 8px;
             display: none;
         }
+
+        /* POPUP ADS */
+        .popup-ad {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            max-width: 80%;
+            height: 250px;
+            background: #444;
+            color: white;
+            border: 2px solid #666;
+            z-index: 2000;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .popup-ad .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Nascondi adsense per schermi piccoli */
+        @media screen and (max-width: 600px) {
+            #ad-placeholder1, #ad-placeholder2 { display: none; }
+        }
+
     </style>
-
 </head>
-
 <body>
 
-    <h1>TrynaWinnin</h1>
-    <p id="rules">Flip the coin 10 times consecutively without failing. One mistake ends your chance.
-Can you win the secret prize??</p>
+<h1>TrynaWinnin</h1>
+<p id="rules">Flip the coin 10 times consecutively without failing. One mistake ends your chance.</p>
 
-    <div id="ad-placeholder1">AD SPACE (Google AdSense placeholder)</div>
-    <div id="ad-placeholder2">AD SPACE (Google AdSense placeholder)</div>
+<div id="ad-placeholder1">AD SPACE</div>
+<div id="ad-placeholder2">AD SPACE</div>
 
-    <!-- Moneta -->
-    <div id="coin">🪙</div>
+<div id="coin">🪙</div>
 
-    <p>Streak: <span id="counter">0</span> / 10</p>
+<p>Streak: <span id="counter">0</span> / 10</p>
 
-    <button id="launchBtn">Flip</button>
+<button id="launchBtn">Flip</button>
 
-    <div id="message"></div>
-    <div id="endScreen">
-        <div id="endMessage"></div>
-        <button id="retryBtn">Try Again</button>
-    </div>
+<div id="message"></div>
 
-    <script>
+<div id="endScreen">
+    <div id="endMessage"></div>
+    <button id="retryBtn">Try Again</button>
+</div>
 
-        (function () {
+<!-- POPUP ADS per schermi piccoli -->
+<div class="popup-ad" id="popup1">
+    <span class="close-btn" onclick="this.parentElement.style.display='none'">X</span>
+    Small screen ad 1
+</div>
+<div class="popup-ad" id="popup2">
+    <span class="close-btn" onclick="this.parentElement.style.display='none'">X</span>
+    Small screen ad 2
+</div>
 
-            const button = document.getElementById("launchBtn");
-            const counterSpan = document.getElementById("counter");
-            const messageDiv = document.getElementById("message");
-            const endScreen = document.getElementById("endScreen");
-            const coin = document.getElementById("coin");
-            const retryBtn = document.getElementById("retryBtn");
-            const endMessage = document.getElementById("endMessage");
+<script>
+(function(){
+    const button = document.getElementById("launchBtn");
+    const counterSpan = document.getElementById("counter");
+    const messageDiv = document.getElementById("message");
+    const endScreen = document.getElementById("endScreen");
+    const coin = document.getElementById("coin");
+    const retryBtn = document.getElementById("retryBtn");
+    const endMessage = document.getElementById("endMessage");
 
-            const phrases = [
-                "Bravo, you made it! The impossible is possible. 😏",
-                "You beat the odds… what now? 🤔",
-                "10 in a row! A legend among coin flippers!",
-                "Congrats! No prize… only glory awaits. 🎉",
-                "You won! The universe acknowledges your skill. 😎",
-                "Perfect streak! Secrets of the coin are yours now.",
-                "Master flipper! Few dare to achieve this.",
-                "The coin bows to your consistency!",
-                "Incredible! The streak whispers your name.",
-                "Victory! Only the truly patient can reach this."
-            ];
+    const phrases = [
+        "Ok nice, but too bad there’s no prize. 😏",
+        "You got lucky, don’t expect a reward! 🤨",
+        "10 flips? Meh… nothing for you. 😎",
+        "Congrats? Just kidding, no prize. 🎉",
+        "Think you won? Nope, try again!",
+        "Perfect streak? Your reward is nothing!",
+        "Master flipper? More like beginner luck!",
+        "The coin laughs at your attempts!",
+        "Incredible? Only in your dreams!",
+        "Victory? Only frustration awaits!"
+    ];
 
-            let streak = 0;
-            let last = null;
+    let streak = 0;
+    let last = null;
 
-            const hours24 = 24 * 60 * 60 * 1000; // blocco per errore
-            let lastFlip = localStorage.getItem('lastFlip');
-            lastFlip = lastFlip ? parseInt(lastFlip) : 0;
+    const hours24 = 24*60*60*1000;
+    let lastFlip = localStorage.getItem('lastFlip');
+    lastFlip = lastFlip ? parseInt(lastFlip) : 0;
 
-            function updateBlock() {
-                const now = Date.now();
-                const remaining = hours24 - (now - lastFlip);
-                if (remaining > 0) {
-                    button.disabled = true;
-                    const hrs = Math.floor(remaining / (1000 * 60 * 60));
-                    const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                    const secs = Math.floor((remaining % (1000 * 60)) / 1000);
-                    messageDiv.textContent = `Next flip available in ${hrs}h ${mins}m ${secs}s`;
-                } else {
-                    button.disabled = false;
-                    messageDiv.textContent = '';
-                }
-            }
+    function updateBlock() {
+        const now = Date.now();
+        const remaining = hours24 - (now - lastFlip);
+        if(remaining > 0){
+            button.disabled = true;
+            const hrs = Math.floor(remaining / (1000*60*60));
+            const mins = Math.floor((remaining % (1000*60*60)) / (1000*60));
+            const secs = Math.floor((remaining % (1000*60)) / 1000);
+            messageDiv.textContent = `Next flip available in ${hrs}h ${mins}m ${secs}s`;
+        } else {
+            button.disabled = false;
+            messageDiv.textContent = '';
+        }
+    }
+    setInterval(updateBlock,1000);
+    updateBlock();
 
-            setInterval(updateBlock, 1000);
-            updateBlock();
+    button.onclick = () => {
+        button.disabled = true;
+        streak = streak || 0;
 
-            button.onclick = () => {
-                button.disabled = true; // blocca subito per evitare doppio click
-                streak = streak || 0;
+        coin.style.transform = "rotateY(720deg)";
 
-                // Effetto rimbalzo / rotazione della moneta 2 secondi
-                coin.style.transform = "rotateY(720deg)";
+        setTimeout(()=>{
+            coin.style.transform = "rotateY(0deg)";
+            let r = Math.random() < 0.5 ? "H" : "T";
 
-                setTimeout(() => {
-
-                    coin.style.transform = "rotateY(0deg)";
-
-                    let r = Math.random() < 0.5 ? "H" : "T";
-
-                    if (last === null || last === r) {
-                        streak++;
-                        last = r;
-                        counterSpan.textContent = streak;
-
-                        if (streak === 10) {
-                            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                            endMessage.textContent = phrase;
-                            endScreen.style.display = "flex";
-                            endScreen.style.color = "white";
-                            endScreen.style.background = "black";
-
-                            // Nasconde tutto il resto
-                            document.querySelector("h1").style.display = "none";
-                            document.querySelector("#rules").style.display = "none";
-                            document.querySelector("#ad-placeholder1").style.display = "none";
-                            document.querySelector("#ad-placeholder2").style.display = "none";
-                            coin.style.display = "none";
-                            counterSpan.parentElement.style.display = "none";
-                            button.style.display = "none";
-                            messageDiv.style.display = "none";
-
-                        } else {
-                            button.disabled = false; // riabilita il pulsante per il prossimo lancio
-                        }
-
-                    } else {
-                        // Cambiamo il messaggio "GAME OVER" in "Unlucky! Try Again!"
-                        endMessage.textContent = "Unlucky! Try Again!";
-                        endScreen.style.display = "flex";
-                        endScreen.style.color = "red";
-                        endScreen.style.background = "black";
-
-                        // Nasconde tutto il resto
-                        document.querySelector("h1").style.display = "none";
-                        document.querySelector("#rules").style.display = "none";
-                        document.querySelector("#ad-placeholder1").style.display = "none";
-                        document.querySelector("#ad-placeholder2").style.display = "none";
-                        coin.style.display = "none";
-                        counterSpan.parentElement.style.display = "none";
-                        button.style.display = "none";
-                        messageDiv.style.display = "none";
-
-                        streak = 0;
-                        last = null;
-                        counterSpan.textContent = streak;
-
-                        // Salva il blocco 24h solo in caso di errore
-                        localStorage.setItem('lastFlip', Date.now());
-
-                        // Mostra il pulsante "Try Again"
-                        retryBtn.style.display = "block";
-                    }
-
-                }, 2000); // durata animazione moneta 2 secondi
-            };
-
-            // Funzione per il pulsante "Try Again"
-            retryBtn.onclick = () => {
-                // Riporta tutto alla schermata iniziale
-                endScreen.style.display = "none";
-                document.querySelector("h1").style.display = "block";
-                document.querySelector("#rules").style.display = "block";
-                document.querySelector("#ad-placeholder1").style.display = "block";
-                document.querySelector("#ad-placeholder2").style.display = "block";
-                coin.style.display = "inline-block";
-                counterSpan.parentElement.style.display = "block";
-                button.style.display = "block";
-                messageDiv.style.display = "block";
-                streak = 0;
-                last = null;
+            if(last === null || last === r){
+                streak++;
+                last = r;
                 counterSpan.textContent = streak;
-                retryBtn.style.display = "none"; // Nasconde il pulsante "Try Again"
-            };
 
-        })();
+                if(streak===10){
+                    endMessage.textContent = phrases[Math.floor(Math.random()*phrases.length)];
+                    endScreen.style.display = "flex";
+                    document.querySelector("h1").style.display="none";
+                    document.querySelector("#rules").style.display="none";
+                    document.querySelector("#ad-placeholder1").style.display="none";
+                    document.querySelector("#ad-placeholder2").style.display="none";
+                    coin.style.display="none";
+                    counterSpan.parentElement.style.display="none";
+                    button.style.display="none";
+                    messageDiv.style.display="none";
+                } else button.disabled=false;
+            } else {
+                endMessage.textContent="Unlucky! Try Again!";
+                endScreen.style.display="flex";
+                endScreen.style.color="red";
+                document.querySelector("h1").style.display="none";
+                document.querySelector("#rules").style.display="none";
+                document.querySelector("#ad-placeholder1").style.display="none";
+                document.querySelector("#ad-placeholder2").style.display="none";
+                coin.style.display="none";
+                counterSpan.parentElement.style.display="none";
+                button.style.display="none";
+                messageDiv.style.display="none";
 
-    </script>
+                streak=0;
+                last=null;
+                counterSpan.textContent=streak;
+                localStorage.setItem('lastFlip',Date.now());
+                retryBtn.style.display="block";
+            }
+        },2000);
+    };
 
+    retryBtn.onclick=()=>{
+        endScreen.style.display="none";
+        document.querySelector("h1").style.display="block";
+        document.querySelector("#rules").style.display="block";
+        document.querySelector("#ad-placeholder1").style.display="block";
+        document.querySelector("#ad-placeholder2").style.display="block";
+        coin.style.display="inline-block";
+        counterSpan.parentElement.style.display="block";
+        button.style.display="block";
+        messageDiv.style.display="block";
+        streak=0;
+        last=null;
+        counterSpan.textContent=streak;
+        retryBtn.style.display="none";
+    };
+
+    // POPUP ADS per schermi piccoli
+    const popupAds = [document.getElementById("popup1"), document.getElementById("popup2")];
+    let popupIndex = 0;
+    function showPopupAd() {
+        if(window.innerWidth <= 600){
+            popupAds.forEach(p=>p.style.display='none');
+            popupAds[popupIndex].style.display='block';
+            popupIndex = (popupIndex+1) % popupAds.length;
+        }
+    }
+    showPopupAd();
+    setInterval(showPopupAd,60000);
+
+})();
+</script>
 </body>
-
 </html>
