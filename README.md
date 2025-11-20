@@ -1,272 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TrynaWinnin</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<title>TrynaWinnin</title>
+<style>
+    /* Reset e body */
+    * { box-sizing: border-box; margin:0; padding:0; }
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0d0f12, #1a1c22);
-      color: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 380px;
-      text-align: center;
-      position: relative;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #1b2735, #090a0f);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        flex-direction: column;
+        overflow-x: hidden;
     }
 
     h1 {
-      font-size: 2.8rem;
-      margin-bottom: 15px;
-      color: #f1c40f;
-      text-shadow: 2px 2px #000;
+        font-size: 2rem;
+        margin-bottom: 10px;
+        text-shadow: 0 0 10px #00ffcc;
+        text-align: center;
     }
 
     #rules {
-      font-size: 1rem;
-      color: #bbb;
-      margin-bottom: 30px;
+        font-size: 1rem;
+        margin-bottom: 25px;
+        color: #ccc;
+        text-align: center;
+        max-width: 90%;
     }
 
     #coin {
-      font-size: 100px;
-      margin-bottom: 25px;
-      transition: transform 0.8s ease;
+        font-size: 80px;
+        margin: 20px;
+        transition: transform 0.8s ease;
     }
 
     #counter {
-      font-size: 1.5rem;
-      margin-bottom: 25px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
     }
 
-    #launchBtn {
-      padding: 14px 35px;
-      font-size: 1.2rem;
-      background: linear-gradient(45deg, #e74c3c, #d35400);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-      transition: transform 0.2s, background 0.3s;
+    button#launchBtn {
+        padding: 15px 25px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        border: none;
+        background: #00ffcc;
+        color: #111;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,255,204,0.3);
+        transition: all 0.2s;
     }
-    #launchBtn:hover {
-      transform: scale(1.05);
-      background: linear-gradient(45deg, #ff5e57, #e67e22);
+
+    button#launchBtn:hover {
+        background: #00e6b8;
+        transform: scale(1.05);
     }
 
     #message {
-      margin-top: 20px;
-      min-height: 24px;
-      font-size: 1.1rem;
-      color: #e74c3c;
+        margin-top: 15px;
+        font-size: 1rem;
+        color: #ff5555;
+        min-height: 1.2em;
+        text-align: center;
     }
 
+    /* End screen */
     #endScreen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.92);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.9rem;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-      z-index: 50;
-      display: none;
+        position: fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background: rgba(0,0,0,0.9);
+        color: #fff;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        z-index: 999;
     }
 
     #retryBtn {
-      margin-top: 30px;
-      padding: 12px 30px;
-      font-size: 1.1rem;
-      background: #27ae60;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        border:none;
+        border-radius: 8px;
+        cursor:pointer;
+        background:#00ffcc;
+        color:#111;
     }
 
-    .ad-box {
-      position: fixed;
-      width: 80px;
-      height: 250px;
-      background: #2c3e50;
-      color: #aaa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 2px dashed #555;
-      font-size: 14px;
-      z-index: 10;
-    }
-    .ad-left { left: 8px; top: 50%; transform: translateY(-50%); }
-    .ad-right { right: 8px; top: 50%; transform: translateY(-50%); }
+    #retryBtn:hover { background:#00e6b8; }
 
-    .popup-ad {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%;
-      max-width: 300px;
-      background: #34495e;
-      color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.8);
-      text-align: center;
-      z-index: 100;
-      display: none;
+    /* Popup ad */
+    #popupAd {
+        display:none;
+        position: fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color:#fff;
+        text-align: center;
+        font-size: 1.2rem;
     }
 
-    .popup-ad button.close-popup {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 1.3rem;
-      cursor: pointer;
+    #popupAd button {
+        position: absolute;
+        top:15px; right:20px;
+        background:red;
+        color:white;
+        font-size:1.2rem;
+        border:none;
+        border-radius:50%;
+        width:35px; height:35px;
+        cursor:pointer;
     }
 
-    @media(max-width: 768px) {
-      .ad-box { display: none; }
+    /* Desktop ads - laterali */
+    #ad-left, #ad-right {
+        display:block;
+        position:fixed;
+        top:50px;
+        width:90px; height:728px;
+        background:#333;
+        color:#aaa;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-size:16px;
+        border:2px dashed #555;
     }
-  </style>
+
+    #ad-left { left:0; }
+    #ad-right { right:0; }
+
+    /* Responsive */
+    @media(max-width:768px){
+        #ad-left, #ad-right { display:none; }
+    }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>TrynaWinnin</h1>
-    <p id="rules">Flip the coin 10 times in a row. One mistake and you’re out. Ready?</p>
-    <div id="coin">🪙</div>
-    <div id="counter">0 / 10</div>
-    <button id="launchBtn">Flip</button>
-    <div id="message"></div>
-  </div>
 
-  <div id="endScreen">
+<h1>TrynaWinnin</h1>
+<p id="rules">Flip the coin 10 times consecutively without failing. One mistake ends your chance. Can you beat your friends?</p>
+
+<div id="coin">🪙</div>
+<p id="counter">Streak: 0 / 10</p>
+<button id="launchBtn">Flip</button>
+<div id="message"></div>
+
+<!-- End Screen -->
+<div id="endScreen">
     <div id="endMessage"></div>
     <button id="retryBtn">Try Again</button>
-  </div>
+</div>
 
-  <div class="ad-box ad-left">AD</div>
-  <div class="ad-box ad-right">AD</div>
+<!-- Popup Ad -->
+<div id="popupAd">
+    <button id="closePopup">X</button>
+    <div>🔥 Special Offer! Click here! 🔥</div>
+</div>
 
-  <div class="popup-ad" id="popupAd">
-    <button class="close-popup" id="closePopup">✖</button>
-    <div id="popupText">🔥 Special Offer!</div>
-  </div>
+<!-- Desktop Ads -->
+<div id="ad-left">AD</div>
+<div id="ad-right">AD</div>
 
-  <script>
-    (function(){
-      const coin = document.getElementById('coin');
-      const btn = document.getElementById('launchBtn');
-      const counterDiv = document.getElementById('counter');
-      const messageDiv = document.getElementById('message');
-      const endScreen = document.getElementById('endScreen');
-      const endMessage = document.getElementById('endMessage');
-      const retryBtn = document.getElementById('retryBtn');
-      const popupAd = document.getElementById('popupAd');
-      const closePopupBtn = document.getElementById('closePopup');
+<script>
+(function(){
+    const coin = document.getElementById("coin");
+    const button = document.getElementById("launchBtn");
+    const counterSpan = document.getElementById("counter");
+    const messageDiv = document.getElementById("message");
+    const endScreen = document.getElementById("endScreen");
+    const endMessage = document.getElementById("endMessage");
+    const retryBtn = document.getElementById("retryBtn");
 
-      let streak = 0;
-      let last = null;
+    // Popup
+    const popupAd = document.getElementById("popupAd");
+    const closePopupBtn = document.getElementById("closePopup");
 
-      const loseMessages = [
-        "Oh wow… you actually lost. Again.",
-        "Seriously? That was your best flip?",
-        "Epic fail! The coin laughs at you.",
-        "Try harder next time… or don’t.",
-        "You're about as lucky as a rock.",
-        "Congrats, you messed up pretty badly.",
-        "Is this even fun for you? Because it's brutal.",
-        "That streak is dead. R.I.P.",
-        "No prize for you, just embarrassment.",
-        "Maybe the coin is better than you. Fact.",
-        "You call that a flip? Pathetic.",
-        "Losing never looked so consistent.",
-        "Try flipping with your eyes closed… still fail.",
-        "Are you even paying attention? Because you lost.",
-        "Your streak died a sad, slow death."
-      ];
+    let streak = 0;
+    let last = null;
 
-      // Mostra popup ad, blocca il tasto
-      function showPopupAd(){
-        if(window.innerWidth <= 768){
-          popupAd.style.display = 'block';
-          btn.disabled = true;
-        }
-      }
-      // Chiudi popup
-      function hidePopupAd(){
-        popupAd.style.display = 'none';
-        btn.disabled = false;
-        setTimeout(showPopupAd, 25000); // ogni 25s
-      }
+    const losePhrases = [
+        "Ok, congrats… now cry like a baby 😏",
+        "Oops, that was embarrassing 😈",
+        "Better luck next time, loser!",
+        "You call that skill? 😂",
+        "Try again, maybe you’ll survive!",
+        "Haha, almost but NO!",
+        "Epic fail! Did you even try?",
+        "That streak was your fantasy, not reality!",
+        "Wrong move! Rage incoming?",
+        "You lost… imagine being that bad!"
+    ];
 
-      closePopupBtn.addEventListener('click', hidePopupAd);
-      // Primo popup dopo breve attesa
-      setTimeout(showPopupAd, 5000);
+    const winPhrases = [
+        "Wow, lucky this time! 😏",
+        "Congrats… but you still suck 😂",
+        "You won… try not to get cocky!",
+        "Victory! Don’t let it get to your head 😈",
+        "Nice one… now can you do it again?",
+        "You got it! But don’t think you’re pro.",
+        "Hah, beginner’s luck! 🤑",
+        "You beat the odds… barely!",
+        "Lucky streak! Or just skill? 🤔",
+        "Congrats… shame there’s no prize!"
+    ];
 
-      function flipOnce(){
+    // Flip function
+    function flipCoin(){
+        button.disabled = true;
         coin.style.transform = "rotateY(720deg)";
-        setTimeout(() => {
-          coin.style.transform = "rotateY(0deg)";
-          let r = Math.random() < 0.5 ? "H" : "T";
-          if(last === null || r === last){
-            streak++;
-            last = r;
-            counterDiv.textContent = streak + " / 10";
-            if(streak === 10){
-              endMessage.textContent = "Legendary! You hit 10 in a row!";
-              endScreen.style.display = 'flex';
-              btn.disabled = true;
+        setTimeout(()=>{
+            coin.style.transform = "rotateY(0deg)";
+            let r = Math.random() < 0.5 ? "H":"T";
+            if(last === null || last === r){
+                streak++;
+                last = r;
+                counterSpan.textContent = `Streak: ${streak} / 10`;
+                if(streak === 10){
+                    endMessage.textContent = winPhrases[Math.floor(Math.random()*winPhrases.length)];
+                    endScreen.style.display = "flex";
+                } else {
+                    button.disabled = false;
+                }
             } else {
-              btn.disabled = false;
+                endMessage.textContent = losePhrases[Math.floor(Math.random()*losePhrases.length)];
+                endScreen.style.display = "flex";
             }
-          } else {
-            const msg = loseMessages[Math.floor(Math.random()*loseMessages.length)];
-            endMessage.textContent = msg;
-            endScreen.style.display = 'flex';
-            btn.disabled = true;
-          }
-        }, 1000);
-      }
+        },800);
+    }
 
-      btn.addEventListener('click', () => {
-        btn.disabled = true;
-        flipOnce();
-      });
+    button.onclick = flipCoin;
 
-      retryBtn.addEventListener('click', () => {
-        streak = 0;
-        last = null;
-        counterDiv.textContent = "0 / 10";
-        endScreen.style.display = 'none';
-        btn.disabled = false;
-      });
+    retryBtn.onclick = ()=>{
+        endScreen.style.display = "none";
+        streak=0; last=null;
+        counterSpan.textContent = `Streak: ${streak} / 10`;
+        button.disabled=false;
+    };
 
-      window.addEventListener('resize', () => {
-        if(window.innerWidth > 768){
-          popupAd.style.display = 'none';
+    // Popup logic
+    function showPopupAd(){
+        if(window.innerWidth<=768){
+            popupAd.style.display='flex';
+            button.disabled=true;
         }
-      });
+    }
 
-    })();
-  </script>
+    function hidePopupAd(){
+        popupAd.style.display='none';
+        button.disabled=false;
+        setTimeout(showPopupAd,15000);
+    }
+
+    closePopupBtn.addEventListener('click', hidePopupAd);
+
+    // Primo popup dopo 5 secondi
+    setTimeout(showPopupAd,5000);
+
+})();
+</script>
+
 </body>
 </html>
