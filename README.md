@@ -1,150 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>TrynaWinnin</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial;
-            background: #111;
-            color: #f5f5f5;
-            padding-top: 50px;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<title>TrynaWinnin</title>
+<style>
+    body {
+        text-align: center;
+        font-family: Arial;
+        background: #111;
+        color: #f5f5f5;
+        padding-top: 50px;
+        margin: 0;
+    }
 
-        #ad-placeholder1, #ad-placeholder2 {
-            width: 90%;
-            max-width: 90px;
-            height: 728px;
-            background: #333;
-            margin: 0 auto 25px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px dashed #555;
-            color: #aaa;
-            font-size: 18px;
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+    #ad-placeholder1, #ad-placeholder2 {
+        width: 90px;
+        height: 728px;
+        background: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px dashed #555;
+        color: #aaa;
+        font-size: 18px;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
-        #ad-placeholder1 { right: 0; }
-        #ad-placeholder2 { left: 0; }
+    #ad-placeholder1 { right: 0; }
+    #ad-placeholder2 { left: 0; }
 
-        #coin {
-            font-size: 100px;
-            margin: 20px;
-            transition: transform 2s ease;
-            display: inline-block;
-        }
+    #coin {
+        font-size: 100px;
+        margin: 20px;
+        transition: transform 2s ease;
+        display: inline-block;
+    }
 
-        button {
-            padding: 15px 25px;
-            font-size: 18px;
-            cursor: pointer;
-            margin: 8px;
-            border: none;
-            background: #333;
-            color: white;
-            border-radius: 8px;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-        }
+    button {
+        padding: 15px 25px;
+        font-size: 18px;
+        cursor: pointer;
+        margin: 15px;
+        border: none;
+        background: #333;
+        color: white;
+        border-radius: 8px;
+    }
 
-        button:hover { background: #555; }
+    button:hover { background: #555; }
 
-        #counter {
-            font-weight: bold;
-            font-size: 24px;
-        }
+    #counter {
+        font-weight: bold;
+        font-size: 24px;
+    }
 
-        #message {
-            font-size: 24px;
-            margin-top: 25px;
-            font-weight: bold;
-            color: #0f0;
-        }
+    #message {
+        font-size: 24px;
+        margin-top: 25px;
+        font-weight: bold;
+        color: #0f0;
+    }
 
-        #rules {
-            margin-top: -10px;
-            margin-bottom: 25px;
-            font-size: 18px;
-            color: #ccc;
-            font-style: italic;
-        }
+    #rules {
+        margin-top: -10px;
+        margin-bottom: 25px;
+        font-size: 18px;
+        color: #ccc;
+        font-style: italic;
+    }
 
-        #endScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-            text-align: center;
-            padding: 20px;
-            display: none;
-            flex-direction: column;
-            background: black;
-        }
+    #endScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 32px;
+        text-align: center;
+        padding: 20px;
+        display: none;
+        flex-direction: column;
+        background: black;
+    }
 
-        #retryBtn {
-            padding: 15px 25px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-            border: none;
-            background: #333;
-            color: white;
-            border-radius: 8px;
-            display: none;
-        }
+    #retryBtn {
+        padding: 15px 25px;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 20px;
+        border: none;
+        background: #333;
+        color: white;
+        border-radius: 8px;
+        display: none;
+    }
 
-        /* POPUP ADS */
-        .popup-ad {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            max-width: 80%;
-            height: 250px;
-            background: #444;
-            color: white;
-            border: 2px solid #666;
-            z-index: 2000;
-            padding: 10px;
-            box-sizing: border-box;
-        }
+    /* POPUP ADS per schermi piccoli */
+    .popup-ad {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(20,20,20,0.95);
+        color: white;
+        z-index: 2000;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 32px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
 
-        .popup-ad .close-btn {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    .popup-ad .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 24px;
+    }
 
-        /* Nascondi adsense per schermi piccoli */
-        @media screen and (max-width: 600px) {
-            #ad-placeholder1, #ad-placeholder2 { display: none; }
-        }
-
-    </style>
+    /* Nascondi adsense per schermi piccoli */
+    @media screen and (max-width: 600px) {
+        #ad-placeholder1, #ad-placeholder2 { display: none; }
+    }
+</style>
 </head>
 <body>
 
@@ -157,7 +146,6 @@
 <div id="coin">🪙</div>
 
 <p>Streak: <span id="counter">0</span> / 10</p>
-
 <button id="launchBtn">Flip</button>
 
 <div id="message"></div>
@@ -295,7 +283,7 @@
     function showPopupAd() {
         if(window.innerWidth <= 600){
             popupAds.forEach(p=>p.style.display='none');
-            popupAds[popupIndex].style.display='block';
+            popupAds[popupIndex].style.display='flex';
             popupIndex = (popupIndex+1) % popupAds.length;
         }
     }
