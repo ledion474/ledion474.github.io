@@ -2,80 +2,80 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TrynaWinnin</title>
 <style>
-    /* Reset e body */
-    * { box-sizing: border-box; margin:0; padding:0; }
+    /* RESET & BODY */
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
         font-family: 'Arial', sans-serif;
-        background: linear-gradient(135deg, #1b2735, #090a0f);
+        background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
         color: #fff;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
         flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
         overflow-x: hidden;
+        padding-bottom: 50px;
     }
 
     h1 {
-        font-size: 2rem;
-        margin-bottom: 10px;
-        text-shadow: 0 0 10px #00ffcc;
+        margin-top: 40px;
+        font-size: 3rem;
+        text-shadow: 2px 2px 10px #000;
         text-align: center;
     }
 
     #rules {
-        font-size: 1rem;
-        margin-bottom: 25px;
+        margin: 10px 20px 30px 20px;
+        font-size: 1.2rem;
+        text-align: center;
+        font-style: italic;
         color: #ccc;
-        text-align: center;
-        max-width: 90%;
     }
 
+    /* COIN */
     #coin {
-        font-size: 80px;
+        font-size: 120px;
         margin: 20px;
-        transition: transform 0.8s ease;
+        transition: transform 1s ease;
     }
 
-    #counter {
-        font-weight: bold;
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-    }
-
-    button#launchBtn {
-        padding: 15px 25px;
-        font-size: 1.2rem;
-        border-radius: 8px;
-        border: none;
-        background: #00ffcc;
-        color: #111;
-        cursor: pointer;
-        box-shadow: 0 5px 15px rgba(0,255,204,0.3);
-        transition: all 0.2s;
-    }
-
-    button#launchBtn:hover {
-        background: #00e6b8;
-        transform: scale(1.05);
-    }
-
-    #message {
-        margin-top: 15px;
-        font-size: 1rem;
-        color: #ff5555;
-        min-height: 1.2em;
+    /* COUNTER */
+    #counter-container {
         text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
     }
 
-    /* End screen */
+    /* BUTTON */
+    #launchBtn {
+        padding: 15px 40px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(45deg,#f39c12,#e74c3c);
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        transition: transform 0.2s;
+    }
+    #launchBtn:hover { transform: scale(1.1); }
+
+    /* MESSAGE */
+    #message {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    /* END SCREEN */
     #endScreen {
         position: fixed;
         top:0; left:0;
-        width:100%; height:100%;
-        background: rgba(0,0,0,0.9);
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
         color: #fff;
         display: none;
         flex-direction: column;
@@ -83,197 +83,234 @@
         align-items: center;
         text-align: center;
         padding: 20px;
-        z-index: 999;
+        font-size: 2rem;
+        z-index: 9999;
     }
-
     #retryBtn {
-        margin-top: 20px;
-        padding: 12px 25px;
-        font-size: 1.1rem;
-        border:none;
-        border-radius: 8px;
-        cursor:pointer;
-        background:#00ffcc;
-        color:#111;
+        margin-top: 30px;
+        padding: 15px 35px;
+        font-size: 1.5rem;
+        border: none;
+        border-radius: 10px;
+        background: #27ae60;
+        cursor: pointer;
     }
 
-    #retryBtn:hover { background:#00e6b8; }
-
-    /* Popup ad */
-    #popupAd {
-        display:none;
+    /* ADS */
+    .ad {
         position: fixed;
-        top:0; left:0;
-        width:100%; height:100%;
-        background: rgba(0,0,0,0.95);
-        z-index: 1000;
+        width: 120px;
+        height: 600px;
+        background: #444;
+        border: 2px dashed #aaa;
+        display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column;
-        color:#fff;
+        font-size: 14px;
+        color: #fff;
+        z-index: 500;
+        transition: all 0.5s;
+    }
+    #ad-left { left: 10px; top: 50%; transform: translateY(-50%); }
+    #ad-right { right: 10px; top: 50%; transform: translateY(-50%); }
+
+    /* POPUP ADS MOBILE */
+    .popup-ad {
+        position: fixed;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 350px;
+        background: #222;
+        color: #fff;
+        border: 2px solid #fff;
+        padding: 20px;
+        display: none;
+        z-index: 10000;
+        border-radius: 10px;
         text-align: center;
-        font-size: 1.2rem;
     }
-
-    #popupAd button {
+    .popup-ad .close {
         position: absolute;
-        top:15px; right:20px;
-        background:red;
-        color:white;
-        font-size:1.2rem;
-        border:none;
-        border-radius:50%;
-        width:35px; height:35px;
-        cursor:pointer;
+        top: 5px;
+        right: 10px;
+        cursor: pointer;
+        font-weight: bold;
     }
 
-    /* Desktop ads - laterali */
-    #ad-left, #ad-right {
-        display:block;
-        position:fixed;
-        top:50px;
-        width:90px; height:728px;
-        background:#333;
-        color:#aaa;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        font-size:16px;
-        border:2px dashed #555;
-    }
-
-    #ad-left { left:0; }
-    #ad-right { right:0; }
-
-    /* Responsive */
-    @media(max-width:768px){
-        #ad-left, #ad-right { display:none; }
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .ad { display: none; }
+        #launchBtn { font-size: 1.3rem; padding: 12px 30px; }
+        #coin { font-size: 100px; }
+        #counter-container { font-size: 1.3rem; }
     }
 </style>
 </head>
 <body>
 
 <h1>TrynaWinnin</h1>
-<p id="rules">Flip the coin 10 times consecutively without failing. One mistake ends your chance. Can you beat your friends?</p>
+<p id="rules">Flip the coin 10 times in a row. One mistake ends your streak. Can you beat the odds?</p>
 
+<!-- Ads -->
+<div id="ad-left" class="ad">AD LEFT</div>
+<div id="ad-right" class="ad">AD RIGHT</div>
+
+<!-- Popup Ads Mobile -->
+<div id="popup1" class="popup-ad">
+    <span class="close" onclick="closePopup('popup1')">X</span>
+    Mobile Ad #1
+</div>
+<div id="popup2" class="popup-ad">
+    <span class="close" onclick="closePopup('popup2')">X</span>
+    Mobile Ad #2
+</div>
+
+<!-- Coin -->
 <div id="coin">🪙</div>
-<p id="counter">Streak: 0 / 10</p>
+
+<div id="counter-container">Streak: <span id="counter">0</span> / 10</div>
+
 <button id="launchBtn">Flip</button>
+
 <div id="message"></div>
 
-<!-- End Screen -->
 <div id="endScreen">
     <div id="endMessage"></div>
     <button id="retryBtn">Try Again</button>
 </div>
 
-<!-- Popup Ad -->
-<div id="popupAd">
-    <button id="closePopup">X</button>
-    <div>🔥 Special Offer! Click here! 🔥</div>
-</div>
-
-<!-- Desktop Ads -->
-<div id="ad-left">AD</div>
-<div id="ad-right">AD</div>
-
 <script>
 (function(){
-    const coin = document.getElementById("coin");
     const button = document.getElementById("launchBtn");
     const counterSpan = document.getElementById("counter");
     const messageDiv = document.getElementById("message");
     const endScreen = document.getElementById("endScreen");
-    const endMessage = document.getElementById("endMessage");
+    const coin = document.getElementById("coin");
     const retryBtn = document.getElementById("retryBtn");
+    const endMessage = document.getElementById("endMessage");
 
-    // Popup
-    const popupAd = document.getElementById("popupAd");
-    const closePopupBtn = document.getElementById("closePopup");
+    // Popup ads
+    const popup1 = document.getElementById("popup1");
+    const popup2 = document.getElementById("popup2");
+    let showFirstPopup = true;
+
+    const losePhrases = [
+        "Wow, lucky you… no prize anyway!",
+        "Keep dreaming! You lost again. 😏",
+        "Oops! Maybe coins aren’t your thing.",
+        "Better luck next time… or not!",
+        "Nice try, but the universe laughs at you!",
+        "Streak broken! Don’t quit your day job.",
+        "Hah! Is that all you got?",
+        "Flipping coins, losing glory… classic!",
+        "Pathetic! You’ll need more luck.",
+        "Try harder next time, maybe in another life.",
+        "You call that flipping? 😂",
+        "Epic fail! The coin mocks you.",
+        "Not even close, keep practicing!",
+        "Ha! Your streak ended… shocking?",
+        "Almost… but still terrible luck!",
+        "You lost? Again? Wow, impressive.",
+        "Maybe stick to rock-paper-scissors."
+    ];
+
+    const winPhrases = [
+        "Lucky you… still no prize! 😏",
+        "Wow, perfect streak! Don’t get used to it!",
+        "Congrats… you still lose in real life!",
+        "10 in a row! But can you do it tomorrow?",
+        "You won? Big deal, try again!",
+        "Impressive! But not enough to brag.",
+        "A streak… yet still unlucky elsewhere.",
+        "Legend of coins… mediocre human.",
+        "Victory? Pfft, only here.",
+        "Master flipper… let’s see if you keep it."
+    ];
 
     let streak = 0;
     let last = null;
 
-    const losePhrases = [
-        "Ok, congrats… now cry like a baby 😏",
-        "Oops, that was embarrassing 😈",
-        "Better luck next time, loser!",
-        "You call that skill? 😂",
-        "Try again, maybe you’ll survive!",
-        "Haha, almost but NO!",
-        "Epic fail! Did you even try?",
-        "That streak was your fantasy, not reality!",
-        "Wrong move! Rage incoming?",
-        "You lost… imagine being that bad!"
-    ];
+    function showPopup(){
+        if(window.innerWidth <= 768){
+            button.disabled = true; // block flip while popup visible
+            if(showFirstPopup){
+                popup1.style.display = "block";
+                popup2.style.display = "none";
+            } else {
+                popup2.style.display = "block";
+                popup1.style.display = "none";
+            }
+            showFirstPopup = !showFirstPopup;
+        }
+    }
+    setInterval(showPopup, 15000); // every 15 sec
 
-    const winPhrases = [
-        "Wow, lucky this time! 😏",
-        "Congrats… but you still suck 😂",
-        "You won… try not to get cocky!",
-        "Victory! Don’t let it get to your head 😈",
-        "Nice one… now can you do it again?",
-        "You got it! But don’t think you’re pro.",
-        "Hah, beginner’s luck! 🤑",
-        "You beat the odds… barely!",
-        "Lucky streak! Or just skill? 🤔",
-        "Congrats… shame there’s no prize!"
-    ];
+    window.closePopup = function(id){
+        document.getElementById(id).style.display = "none";
+        button.disabled = false; // re-enable button after closing popup
+    }
 
-    // Flip function
-    function flipCoin(){
+    button.onclick = () => {
         button.disabled = true;
         coin.style.transform = "rotateY(720deg)";
-        setTimeout(()=>{
+        setTimeout(() => {
             coin.style.transform = "rotateY(0deg)";
-            let r = Math.random() < 0.5 ? "H":"T";
-            if(last === null || last === r){
+            let r = Math.random() < 0.5 ? "H" : "T";
+
+            if(last===null || last===r){
                 streak++;
                 last = r;
-                counterSpan.textContent = `Streak: ${streak} / 10`;
+                counterSpan.textContent = streak;
+
                 if(streak === 10){
                     endMessage.textContent = winPhrases[Math.floor(Math.random()*winPhrases.length)];
                     endScreen.style.display = "flex";
+                    hideAll();
                 } else {
                     button.disabled = false;
                 }
+
             } else {
                 endMessage.textContent = losePhrases[Math.floor(Math.random()*losePhrases.length)];
                 endScreen.style.display = "flex";
+                streak = 0;
+                last = null;
+                counterSpan.textContent = streak;
+                retryBtn.style.display = "block";
+                hideAll();
             }
-        },800);
+        }, 1500);
     }
 
-    button.onclick = flipCoin;
+    function hideAll(){
+        document.querySelector("h1").style.display = "none";
+        document.querySelector("#rules").style.display = "none";
+        document.querySelector("#coin").style.display = "none";
+        document.querySelector("#counter-container").style.display = "none";
+        document.querySelector("#launchBtn").style.display = "none";
+        messageDiv.style.display = "none";
+        document.getElementById("ad-left").style.display = "none";
+        document.getElementById("ad-right").style.display = "none";
+    }
 
-    retryBtn.onclick = ()=>{
+    retryBtn.onclick = () => {
         endScreen.style.display = "none";
-        streak=0; last=null;
-        counterSpan.textContent = `Streak: ${streak} / 10`;
-        button.disabled=false;
-    };
+        document.querySelector("h1").style.display = "block";
+        document.querySelector("#rules").style.display = "block";
+        document.querySelector("#coin").style.display = "block";
+        document.querySelector("#counter-container").style.display = "block";
+        document.querySelector("#launchBtn").style.display = "block";
+        messageDiv.style.display = "block";
+        retryBtn.style.display = "none";
 
-    // Popup logic
-    function showPopupAd(){
-        if(window.innerWidth<=768){
-            popupAd.style.display='flex';
-            button.disabled=true;
+        if(window.innerWidth > 768){
+            document.getElementById("ad-left").style.display = "block";
+            document.getElementById("ad-right").style.display = "block";
         }
     }
-
-    function hidePopupAd(){
-        popupAd.style.display='none';
-        button.disabled=false;
-        setTimeout(showPopupAd,15000);
-    }
-
-    closePopupBtn.addEventListener('click', hidePopupAd);
-
-    // Primo popup dopo 5 secondi
-    setTimeout(showPopupAd,5000);
-
 })();
 </script>
-
 </body>
 </html>
