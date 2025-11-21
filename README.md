@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Banana Chaos - Mobile Friendly</title>
+<title>Banana Chaos - Corretto Mobile/Desktop</title>
 <style>
 body{margin:0;overflow:hidden;background:#ffe98a;font-family:Arial}
 #gameCanvas{display:block;margin:auto;border:4px solid #ffcc00; background:#fff7d1;}
@@ -39,7 +39,7 @@ button{font-size:20px;padding:10px 20px;background:#ffcc00;border:0;border-radiu
 @media (max-width:768px){
     #gameCanvas{
         width:100vw;
-        height:calc(100vw * 500 / 800); /* proporzioni 800x500 */
+        height:calc(100vw * 500 / 800);
     }
     #joystickContainer{
         bottom:10px;
@@ -57,7 +57,7 @@ button{font-size:20px;padding:10px 20px;background:#ffcc00;border:0;border-radiu
 <div id="joystickContainer"><div id="joystick"></div></div>
 
 <div id="gameOver"><div id="msg"></div><br><button onclick="restart()">Ricomincia</button></div>
-<div id="levelUp"><div id="msg2"></div></div>
+<div id="levelUp"><div id="msg2"></div><button onclick="startNextLevel()">➡ Continua</button></div>
 
 <script>
 // -------------------
@@ -165,8 +165,8 @@ function movePlayer(){
         if(keys["d"]||keys["ArrowRight"]) player.x+=player.speed;
     }
     if(joyActive){
-        player.x+=joyX*player.speed*2/getScaleX();
-        player.y+=joyY*player.speed*2/getScaleY();
+        player.x+=joyX*player.speed*2; // velocità uniforme
+        player.y+=joyY*player.speed*2;
     }
     player.x=Math.max(10,Math.min(790,player.x));
     player.y=Math.max(10,Math.min(490,player.y));
@@ -237,6 +237,7 @@ function startTimer(){
 // LEVEL UP ANIMATION
 // -------------------
 function showLevelUp(){
+    gameRunning=false;
     const msg=document.getElementById("msg2");
     msg.innerHTML="✔ Livello "+level+" completato!";
     document.getElementById("levelUp").style.display="block";
@@ -251,23 +252,18 @@ function showLevelUp(){
             life:50+Math.random()*50
         });
     }
-    setTimeout(()=>document.getElementById("levelUp").style.display="none",1500);
 }
 
 // -------------------
 // LEVEL
 // -------------------
 function winLevel(){
-    gameRunning=false;
-    if(level===5){
-        document.getElementById("msg").innerHTML="🎉 Hai finito il gioco!";
-        document.getElementById("gameOver").style.display="block";
-        return;
-    }
     showLevelUp();
 }
 
+// Bottone continua Level Up
 function startNextLevel(){
+    document.getElementById("levelUp").style.display="none";
     level++;
     enemyCount+=2;
     enemySpeed+=0.5;
@@ -279,6 +275,7 @@ function startNextLevel(){
 // -------------------
 function endGame(msg){
     gameRunning=false;
+    clearInterval(timerId);
     document.getElementById("msg").innerHTML=msg;
     document.getElementById("gameOver").style.display="block";
 }
