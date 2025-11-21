@@ -1,316 +1,229 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrynaWinnin</title>
+<title>Banana Chaos - Timer Fix Assoluto</title>
 <style>
-    /* RESET & BODY */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-        color: #fff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-
-    h1 {
-        margin-top: 40px;
-        font-size: 3rem;
-        text-shadow: 2px 2px 10px #000;
-        text-align: center;
-    }
-
-    #rules {
-        margin: 10px 20px 30px 20px;
-        font-size: 1.2rem;
-        text-align: center;
-        font-style: italic;
-        color: #ccc;
-    }
-
-    /* COIN */
-    #coin {
-        font-size: 120px;
-        margin: 20px;
-        transition: transform 1s ease;
-    }
-
-    /* COUNTER */
-    #counter-container {
-        text-align: center;
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-    }
-
-    /* BUTTON */
-    #launchBtn {
-        padding: 15px 40px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        border: none;
-        border-radius: 10px;
-        background: linear-gradient(45deg,#f39c12,#e74c3c);
-        color: #fff;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        transition: transform 0.2s;
-    }
-    #launchBtn:hover { transform: scale(1.1); }
-
-    /* MESSAGE */
-    #message {
-        margin-top: 20px;
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
-
-    /* END SCREEN */
-    #endScreen {
-        position: fixed;
-        top:0; left:0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.95);
-        color: #fff;
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-        font-size: 2rem;
-        z-index: 9999;
-    }
-    #retryBtn {
-        margin-top: 30px;
-        padding: 15px 35px;
-        font-size: 1.5rem;
-        border: none;
-        border-radius: 10px;
-        background: #27ae60;
-        cursor: pointer;
-    }
-
-    /* ADS */
-    .ad {
-        position: fixed;
-        width: 120px;
-        height: 600px;
-        background: #444;
-        border: 2px dashed #aaa;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 14px;
-        color: #fff;
-        z-index: 500;
-        transition: all 0.5s;
-    }
-    #ad-left { left: 10px; top: 50%; transform: translateY(-50%); }
-    #ad-right { right: 10px; top: 50%; transform: translateY(-50%); }
-
-    /* POPUP ADS MOBILE */
-    .popup-ad {
-        position: fixed;
-        top: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 350px;
-        background: #222;
-        color: #fff;
-        border: 2px solid #fff;
-        padding: 20px;
-        display: none;
-        z-index: 10000;
-        border-radius: 10px;
-        text-align: center;
-    }
-    .popup-ad .close {
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-        .ad { display: none; }
-        #launchBtn { font-size: 1.3rem; padding: 12px 30px; }
-        #coin { font-size: 100px; }
-        #counter-container { font-size: 1.3rem; }
-    }
+body{margin:0;overflow:hidden;background:#ffe98a;font-family:Arial}
+#gameCanvas{background:#fff7d1;display:block;margin:auto;border:4px solid #ffcc00}
+#ui{position:absolute;top:10px;left:10px;font-size:24px;font-weight:bold}
+#gameOver,#levelUp{
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(255,255,255,0.9);
+    padding:25px;border-radius:20px;
+    display:none;font-size:28px;text-align:center;
+}
+button{font-size:20px;padding:10px 20px;background:#ffcc00;border:0;border-radius:10px;cursor:pointer}
+/* Joystick mobile */
+#joystickContainer{
+    position:absolute;bottom:40px;left:40px;
+    width:140px;height:140px;border-radius:50%;
+    background:rgba(255,255,255,0.4);display:none
+}
+#joystick{
+    width:60px;height:60px;border-radius:50%;
+    background:#ffcc00;position:absolute;left:40px;top:40px
+}
 </style>
 </head>
+
 <body>
-
-<h1>TrynaWinnin</h1>
-<p id="rules">Flip the coin 10 times in a row. One mistake ends your streak. Can you beat the odds?</p>
-
-<!-- Ads -->
-<div id="ad-left" class="ad">AD LEFT</div>
-<div id="ad-right" class="ad">AD RIGHT</div>
-
-<!-- Popup Ads Mobile -->
-<div id="popup1" class="popup-ad">
-    <span class="close" onclick="closePopup('popup1')">X</span>
-    Mobile Ad #1
-</div>
-<div id="popup2" class="popup-ad">
-    <span class="close" onclick="closePopup('popup2')">X</span>
-    Mobile Ad #2
-</div>
-
-<!-- Coin -->
-<div id="coin">🪙</div>
-
-<div id="counter-container">Streak: <span id="counter">0</span> / 10</div>
-
-<button id="launchBtn">Flip</button>
-
-<div id="message"></div>
-
-<div id="endScreen">
-    <div id="endMessage"></div>
-    <button id="retryBtn">Try Again</button>
-</div>
+<div id="ui">Tempo: <span id="time">0</span> | Livello: <span id="level">1</span></div>
+<div id="joystickContainer"><div id="joystick"></div></div>
+<canvas id="gameCanvas" width="800" height="500"></canvas>
+<div id="gameOver"><div id="msg"></div><br><button onclick="restart()">Ricomincia</button></div>
+<div id="levelUp"><div id="msg2"></div><br><button onclick="startNextLevel()">Continua</button></div>
 
 <script>
-(function(){
-    const button = document.getElementById("launchBtn");
-    const counterSpan = document.getElementById("counter");
-    const messageDiv = document.getElementById("message");
-    const endScreen = document.getElementById("endScreen");
-    const coin = document.getElementById("coin");
-    const retryBtn = document.getElementById("retryBtn");
-    const endMessage = document.getElementById("endMessage");
+// -------------------
+// MOBILE DETECTION
+// -------------------
+function isMobile(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
+const joyContainer=document.getElementById("joystickContainer");
+const joy=document.getElementById("joystick");
+if(isMobile()) joyContainer.style.display="block";
 
-    // Popup ads
-    const popup1 = document.getElementById("popup1");
-    const popup2 = document.getElementById("popup2");
-    let showFirstPopup = true;
+let joyX=0, joyY=0, joyActive=false;
+joyContainer.addEventListener("touchstart",()=>joyActive=true);
+joyContainer.addEventListener("touchend",()=>{joyActive=false;joyX=0;joyY=0;joy.style.left="40px";joy.style.top="40px"});
+joyContainer.addEventListener("touchmove",e=>{
+    const r=joyContainer.getBoundingClientRect();
+    let x=e.touches[0].clientX-r.left-70;
+    let y=e.touches[0].clientY-r.top-70;
+    const d=Math.hypot(x,y), max=50;
+    if(d>max){x*=max/d;y*=max/d;}
+    joy.style.left=(40+x)+"px"; joy.style.top=(40+y)+"px";
+    joyX=x/max; joyY=y/max;
+});
 
-    const phrases = [
-        "Wow, lucky you… no prize anyway!",
-        "Keep dreaming! You lost again. 😏",
-        "Oops! Maybe coins aren’t your thing.",
-        "Better luck next time… or not!",
-        "Nice try, but the universe laughs at you!",
-        "Streak broken! Don’t quit your day job.",
-        "Hah! Is that all you got?",
-        "Flipping coins, losing glory… classic!",
-        "Pathetic! You’ll need more luck.",
-        "Try harder next time, maybe in another life."
-    ];
+// -------------------
+// GAME VARIABLES
+// -------------------
+const canvas=document.getElementById("gameCanvas");
+const ctx=canvas.getContext("2d");
 
-    let streak = 0;
-    let last = null;
+let player={x:400,y:250,size:20,speed:4,color:"#ffdd22"};
+let level=1;
+let requiredTimes=[0,20,30,40,50,60];
+let timeLeft = requiredTimes[level];
+let timerId = null;
 
-    const block24h = 24 * 60 * 60 * 1000;
-    let lastFlip = localStorage.getItem('lastFlip');
-    lastFlip = lastFlip ? parseInt(lastFlip) : 0;
+let enemyCount=5;
+let enemySpeed=2;
+let enemies=[];
 
-    function updateBlock() {
-        const now = Date.now();
-        const remaining = block24h - (now - lastFlip);
-        if (remaining > 0) {
-            button.disabled = true;
-            const hrs = Math.floor(remaining / (1000*60*60));
-            const mins = Math.floor((remaining % (1000*60*60)) / (1000*60));
-            const secs = Math.floor((remaining % (1000*60)) / 1000);
-            messageDiv.textContent = `Next flip in ${hrs}h ${mins}m ${secs}s`;
-        } else {
-            button.disabled = false;
-            messageDiv.textContent = '';
+let gameRunning=false;
+let keys={};
+if(!isMobile()){
+    document.addEventListener("keydown",e=>keys[e.key]=true);
+    document.addEventListener("keyup",e=>keys[e.key]=false);
+}
+
+// -------------------
+// ENEMIES
+// -------------------
+function initEnemies(){
+    enemies=[];
+    for(let i=0;i<enemyCount;i++){
+        enemies.push({
+            x:Math.random()*760+20,
+            y:Math.random()*460+20,
+            size:18,
+            speed:enemySpeed+Math.random(),
+            angle:Math.random()*Math.PI*2,
+            color:"#ff5555"
+        });
+    }
+}
+
+function moveEnemies(){
+    enemies.forEach(e=>{
+        e.x+=Math.cos(e.angle)*e.speed;
+        e.y+=Math.sin(e.angle)*e.speed;
+        if(e.x<10||e.x>790) e.angle=Math.PI-e.angle;
+        if(e.y<10||e.y>490) e.angle=-e.angle;
+        if(Math.hypot(e.x-player.x,e.y-player.y)<e.size+player.size){
+            endGame("💥 Sei stato preso!");
         }
-    }
-    setInterval(updateBlock, 1000);
-    updateBlock();
+    });
+}
 
-    function showPopup(){
-        if(window.innerWidth <= 768){
-            if(showFirstPopup){
-                popup1.style.display = "block";
-                popup2.style.display = "none";
-            } else {
-                popup2.style.display = "block";
-                popup1.style.display = "none";
-            }
-            showFirstPopup = !showFirstPopup;
+// -------------------
+// PLAYER MOVEMENT
+// -------------------
+function movePlayer(){
+    if(!isMobile()){
+        if(keys["w"]||keys["ArrowUp"]) player.y-=player.speed;
+        if(keys["s"]||keys["ArrowDown"]) player.y+=player.speed;
+        if(keys["a"]||keys["ArrowLeft"]) player.x-=player.speed;
+        if(keys["d"]||keys["ArrowRight"]) player.x+=player.speed;
+    }
+    if(joyActive){
+        player.x+=joyX*player.speed*2;
+        player.y+=joyY*player.speed*2;
+    }
+    player.x=Math.max(10,Math.min(790,player.x));
+    player.y=Math.max(10,Math.min(490,player.y));
+}
+
+// -------------------
+// DRAW
+// -------------------
+function draw(){
+    ctx.clearRect(0,0,800,500);
+    ctx.fillStyle=player.color;
+    ctx.beginPath(); ctx.arc(player.x,player.y,player.size,0,Math.PI*2); ctx.fill();
+    enemies.forEach(e=>{
+        ctx.fillStyle=e.color;
+        ctx.beginPath(); ctx.arc(e.x,e.y,e.size,0,Math.PI*2); ctx.fill();
+    });
+}
+
+// -------------------
+// TIMER SICURO
+// -------------------
+function startTimer(){
+    if(timerId) clearInterval(timerId);
+    timeLeft = requiredTimes[level];
+    document.getElementById("time").textContent = timeLeft;
+    timerId = setInterval(()=>{
+        if(!gameRunning){clearInterval(timerId); return;}
+        timeLeft--;
+        document.getElementById("time").textContent = timeLeft;
+        if(timeLeft<=0){
+            clearInterval(timerId);
+            winLevel();
         }
+    },1000);
+}
+
+// -------------------
+// LEVEL HANDLING
+// -------------------
+function winLevel(){
+    gameRunning=false;
+    if(level===5){
+        document.getElementById("msg").innerHTML="🎉 Hai finito il gioco!";
+        document.getElementById("gameOver").style.display="block";
+        return;
     }
-    setInterval(showPopup, 60000); // every 60 sec
+    document.getElementById("msg2").innerHTML="✔ Livello "+level+" completato!";
+    document.getElementById("levelUp").style.display="block";
+}
 
-    window.closePopup = function(id){
-        document.getElementById(id).style.display = "none";
-    }
+function startNextLevel(){
+    level++;
+    enemyCount+=2;
+    enemySpeed+=0.5;
+    startLevel();
+}
 
-    button.onclick = () => {
-        button.disabled = true;
-        coin.style.transform = "rotateY(720deg)";
-        setTimeout(() => {
-            coin.style.transform = "rotateY(0deg)";
-            let r = Math.random() < 0.5 ? "H" : "T";
+// -------------------
+// GAME OVER
+// -------------------
+function endGame(msg){
+    gameRunning=false;
+    document.getElementById("msg").innerHTML=msg;
+    document.getElementById("gameOver").style.display="block";
+}
 
-            if(last===null || last===r){
-                streak++;
-                last = r;
-                counterSpan.textContent = streak;
+function restart(){
+    level=1;
+    enemyCount=5;
+    enemySpeed=2;
+    startLevel();
+}
 
-                if(streak === 10){
-                    endMessage.textContent = "You got the perfect streak! Lucky you, still no prize!";
-                    endScreen.style.display = "flex";
-                    hideAll();
-                } else {
-                    button.disabled = false;
-                }
+// -------------------
+// START LEVEL
+// -------------------
+function startLevel(){
+    gameRunning=true;
+    player.x=400; player.y=250;
+    document.getElementById("level").textContent=level;
+    document.getElementById("gameOver").style.display="none";
+    document.getElementById("levelUp").style.display="none";
+    initEnemies();
+    startTimer();
+    gameLoop();
+}
 
-            } else {
-                endMessage.textContent = phrases[Math.floor(Math.random()*phrases.length)];
-                endScreen.style.display = "flex";
-                streak = 0;
-                last = null;
-                counterSpan.textContent = streak;
-                localStorage.setItem('lastFlip', Date.now());
-                retryBtn.style.display = "block";
-                hideAll();
-            }
-        }, 1500);
-    }
+// -------------------
+// GAME LOOP
+// -------------------
+function gameLoop(){
+    if(!gameRunning) return;
+    movePlayer();
+    moveEnemies();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
 
-    function hideAll(){
-        document.querySelector("h1").style.display = "none";
-        document.querySelector("#rules").style.display = "none";
-        document.querySelector("#coin").style.display = "none";
-        document.querySelector("#counter-container").style.display = "none";
-        document.querySelector("#launchBtn").style.display = "none";
-        messageDiv.style.display = "none";
-        document.getElementById("ad-left").style.display = "none";
-        document.getElementById("ad-right").style.display = "none";
-    }
-
-    retryBtn.onclick = () => {
-        endScreen.style.display = "none";
-        document.querySelector("h1").style.display = "block";
-        document.querySelector("#rules").style.display = "block";
-        document.querySelector("#coin").style.display = "block";
-        document.querySelector("#counter-container").style.display = "block";
-        document.querySelector("#launchBtn").style.display = "block";
-        messageDiv.style.display = "block";
-        retryBtn.style.display = "none";
-        updateBlock();
-        if(window.innerWidth > 768){
-            document.getElementById("ad-left").style.display = "block";
-            document.getElementById("ad-right").style.display = "block";
-        }
-    }
-
-})();
+// -------------------
+// START GAME
+// -------------------
+startLevel();
 </script>
 </body>
 </html>
