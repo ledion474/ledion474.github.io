@@ -15,6 +15,7 @@ body{margin:0;overflow:hidden;background:#ffe98a;font-family:Arial}
     display:none;font-size:28px;text-align:center;
 }
 button{font-size:20px;padding:10px 20px;background:#ffcc00;border:0;border-radius:10px;cursor:pointer}
+
 /* Joystick mobile */
 #joystickContainer{
     position:absolute;
@@ -56,7 +57,7 @@ button{font-size:20px;padding:10px 20px;background:#ffcc00;border:0;border-radiu
 <div id="joystickContainer"><div id="joystick"></div></div>
 
 <div id="gameOver"><div id="msg"></div><br><button onclick="restart()">Ricomincia</button></div>
-<div id="levelUp"><div id="msg2"></div><br><button onclick="startNextLevel()">Continua</button></div>
+<div id="levelUp"><div id="msg2"></div></div>
 
 <script>
 // -------------------
@@ -95,6 +96,7 @@ let timerId=null;
 let enemyCount=5;
 let enemySpeed=2;
 let enemies=[];
+let boss=null;
 
 let gameRunning=false;
 let keys={};
@@ -102,6 +104,11 @@ if(!isMobile()){
     document.addEventListener("keydown",e=>keys[e.key]=true);
     document.addEventListener("keyup",e=>keys[e.key]=false);
 }
+
+// -------------------
+// SCALE FACTORS (per mobile responsive)
+function getScaleX(){ return canvas.width/800; }
+function getScaleY(){ return canvas.height/500; }
 
 // -------------------
 // ENEMIES
@@ -118,7 +125,11 @@ function initEnemies(){
             color:"#ff5555"
         });
     }
+    if(level===5){
+        boss={x:400,y:100,size:40,speed:2,color:"#8000ff"};
+    } else boss=null;
 }
+
 function moveEnemies(){
     enemies.forEach(e=>{
         e.x+=Math.cos(e.angle)*e.speed;
@@ -129,6 +140,18 @@ function moveEnemies(){
             endGame("💥 Sei stato preso!");
         }
     });
+    if(boss){
+        let dx=player.x-boss.x;
+        let dy=player.y-boss.y;
+        let dist=Math.hypot(dx,dy);
+        if(dist>0){
+            boss.x+=dx/dist*boss.speed;
+            boss.y+=dy/dist*boss.speed;
+        }
+        if(Math.hypot(boss.x-player.x,boss.y-player.y)<boss.size+player.size){
+            endGame("💀 Sei stato preso dal Boss!");
+        }
+    }
 }
 
 // -------------------
@@ -142,8 +165,8 @@ function movePlayer(){
         if(keys["d"]||keys["ArrowRight"]) player.x+=player.speed;
     }
     if(joyActive){
-        player.x+=joyX*player.speed*2;
-        player.y+=joyY*player.speed*2;
+        player.x+=joyX*player.speed*2/getScaleX();
+        player.y+=joyY*player.speed*2/getScaleY();
     }
     player.x=Math.max(10,Math.min(790,player.x));
     player.y=Math.max(10,Math.min(490,player.y));
@@ -152,23 +175,44 @@ function movePlayer(){
 // -------------------
 // DRAW
 // -------------------
+let particles=[];
 function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    // Scala proporzionale
-    const scaleX = canvas.width/800;
-    const scaleY = canvas.height/500;
+    const scaleX=getScaleX();
+    const scaleY=getScaleY();
 
+    // Player
     ctx.fillStyle=player.color;
     ctx.beginPath();
     ctx.arc(player.x*scaleX, player.y*scaleY, player.size*scaleX,0,Math.PI*2);
     ctx.fill();
 
+    // Nemici piccoli
     enemies.forEach(e=>{
         ctx.fillStyle=e.color;
         ctx.beginPath();
         ctx.arc(e.x*scaleX,e.y*scaleY,e.size*scaleX,0,Math.PI*2);
         ctx.fill();
     });
+
+    // Boss livello 5
+    if(boss){
+        ctx.fillStyle=boss.color;
+        ctx.beginPath();
+        ctx.arc(boss.x*scaleX,boss.y*scaleY,boss.size*scaleX,0,Math.PI*2);
+        ctx.fill();
+    }
+
+    // Particelle level up
+    particles.forEach(p=>{
+        ctx.fillStyle=p.color;
+        ctx.beginPath();
+        ctx.arc(p.x*scaleX,p.y*scaleY,p.size*scaleX,0,Math.PI*2);
+        ctx.fill();
+        p.y-=p.speed;
+        p.life--;
+    });
+    particles=particles.filter(p=>p.life>0);
 }
 
 // -------------------
@@ -178,15 +222,36 @@ function startTimer(){
     if(timerId) clearInterval(timerId);
     timeLeft = requiredTimes[level];
     document.getElementById("time").textContent = timeLeft;
-    timerId = setInterval(()=>{
-        if(!gameRunning){clearInterval(timerId); return;}
+    timerId=setInterval(()=>{
+        if(!gameRunning){clearInterval(timerId);return;}
         timeLeft--;
-        document.getElementById("time").textContent = timeLeft;
+        document.getElementById("time").textContent=timeLeft;
         if(timeLeft<=0){
             clearInterval(timerId);
             winLevel();
         }
     },1000);
+}
+
+// -------------------
+// LEVEL UP ANIMATION
+// -------------------
+function showLevelUp(){
+    const msg=document.getElementById("msg2");
+    msg.innerHTML="✔ Livello "+level+" completato!";
+    document.getElementById("levelUp").style.display="block";
+    particles=[];
+    for(let i=0;i<50;i++){
+        particles.push({
+            x:Math.random()*800,
+            y:250,
+            size:5+Math.random()*5,
+            speed:1+Math.random()*3,
+            color:`hsl(${Math.random()*60},100%,50%)`,
+            life:50+Math.random()*50
+        });
+    }
+    setTimeout(()=>document.getElementById("levelUp").style.display="none",1500);
 }
 
 // -------------------
@@ -199,8 +264,7 @@ function winLevel(){
         document.getElementById("gameOver").style.display="block";
         return;
     }
-    document.getElementById("msg2").innerHTML="✔ Livello "+level+" completato!";
-    document.getElementById("levelUp").style.display="block";
+    showLevelUp();
 }
 
 function startNextLevel(){
