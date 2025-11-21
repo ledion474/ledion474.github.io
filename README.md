@@ -2,10 +2,10 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Banana Chaos - Timer Fix Assoluto</title>
+<title>Banana Chaos - Mobile Friendly</title>
 <style>
 body{margin:0;overflow:hidden;background:#ffe98a;font-family:Arial}
-#gameCanvas{background:#fff7d1;display:block;margin:auto;border:4px solid #ffcc00}
+#gameCanvas{display:block;margin:auto;border:4px solid #ffcc00; background:#fff7d1;}
 #ui{position:absolute;top:10px;left:10px;font-size:24px;font-weight:bold}
 #gameOver,#levelUp{
     position:absolute;top:50%;left:50%;
@@ -17,36 +17,59 @@ body{margin:0;overflow:hidden;background:#ffe98a;font-family:Arial}
 button{font-size:20px;padding:10px 20px;background:#ffcc00;border:0;border-radius:10px;cursor:pointer}
 /* Joystick mobile */
 #joystickContainer{
-    position:absolute;bottom:40px;left:40px;
-    width:140px;height:140px;border-radius:50%;
-    background:rgba(255,255,255,0.4);display:none
+    position:absolute;
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.4);
+    display:none;
 }
 #joystick{
-    width:60px;height:60px;border-radius:50%;
-    background:#ffcc00;position:absolute;left:40px;top:40px
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#ffcc00;
+    position:absolute;
+    left:40px;
+    top:40px;
+}
+
+/* Mobile responsive */
+@media (max-width:768px){
+    #gameCanvas{
+        width:100vw;
+        height:calc(100vw * 500 / 800); /* proporzioni 800x500 */
+    }
+    #joystickContainer{
+        bottom:10px;
+        left:50%;
+        transform:translateX(-50%);
+        display:block;
+    }
 }
 </style>
 </head>
-
 <body>
+
 <div id="ui">Tempo: <span id="time">0</span> | Livello: <span id="level">1</span></div>
-<div id="joystickContainer"><div id="joystick"></div></div>
 <canvas id="gameCanvas" width="800" height="500"></canvas>
+<div id="joystickContainer"><div id="joystick"></div></div>
+
 <div id="gameOver"><div id="msg"></div><br><button onclick="restart()">Ricomincia</button></div>
 <div id="levelUp"><div id="msg2"></div><br><button onclick="startNextLevel()">Continua</button></div>
 
 <script>
 // -------------------
-// MOBILE DETECTION
+// MOBILE JOYSTICK
 // -------------------
-function isMobile(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
+function isMobile(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);}
 const joyContainer=document.getElementById("joystickContainer");
 const joy=document.getElementById("joystick");
 if(isMobile()) joyContainer.style.display="block";
 
 let joyX=0, joyY=0, joyActive=false;
 joyContainer.addEventListener("touchstart",()=>joyActive=true);
-joyContainer.addEventListener("touchend",()=>{joyActive=false;joyX=0;joyY=0;joy.style.left="40px";joy.style.top="40px"});
+joyContainer.addEventListener("touchend",()=>{joyActive=false;joyX=0;joyY=0;joy.style.left="40px";joy.style.top="40px";});
 joyContainer.addEventListener("touchmove",e=>{
     const r=joyContainer.getBoundingClientRect();
     let x=e.touches[0].clientX-r.left-70;
@@ -67,7 +90,7 @@ let player={x:400,y:250,size:20,speed:4,color:"#ffdd22"};
 let level=1;
 let requiredTimes=[0,20,30,40,50,60];
 let timeLeft = requiredTimes[level];
-let timerId = null;
+let timerId=null;
 
 let enemyCount=5;
 let enemySpeed=2;
@@ -96,7 +119,6 @@ function initEnemies(){
         });
     }
 }
-
 function moveEnemies(){
     enemies.forEach(e=>{
         e.x+=Math.cos(e.angle)*e.speed;
@@ -110,7 +132,7 @@ function moveEnemies(){
 }
 
 // -------------------
-// PLAYER MOVEMENT
+// PLAYER
 // -------------------
 function movePlayer(){
     if(!isMobile()){
@@ -131,17 +153,26 @@ function movePlayer(){
 // DRAW
 // -------------------
 function draw(){
-    ctx.clearRect(0,0,800,500);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // Scala proporzionale
+    const scaleX = canvas.width/800;
+    const scaleY = canvas.height/500;
+
     ctx.fillStyle=player.color;
-    ctx.beginPath(); ctx.arc(player.x,player.y,player.size,0,Math.PI*2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(player.x*scaleX, player.y*scaleY, player.size*scaleX,0,Math.PI*2);
+    ctx.fill();
+
     enemies.forEach(e=>{
         ctx.fillStyle=e.color;
-        ctx.beginPath(); ctx.arc(e.x,e.y,e.size,0,Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(e.x*scaleX,e.y*scaleY,e.size*scaleX,0,Math.PI*2);
+        ctx.fill();
     });
 }
 
 // -------------------
-// TIMER SICURO
+// TIMER
 // -------------------
 function startTimer(){
     if(timerId) clearInterval(timerId);
@@ -159,7 +190,7 @@ function startTimer(){
 }
 
 // -------------------
-// LEVEL HANDLING
+// LEVEL
 // -------------------
 function winLevel(){
     gameRunning=false;
